@@ -6,7 +6,7 @@
    </td>
   </tr>
 </table>
-Langkah-langkah berikut akan membantu Anda menginstal dan mengonfigurasi JupyterLab di server Linux.
+The following steps will help you install and configure JupyterLab on a Linux server.
 
 ## 1. Pip and JupyterLab Installation
 ```bash
