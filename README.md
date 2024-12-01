@@ -16,7 +16,7 @@ sudo apt install python3-pip
 ```bash
 pip install --user jupyterlab
 ```
-## 2. Set path local user
+## 2. Set path
 ```bash
 sudo nano ~/.bashrc
 ```
