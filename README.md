@@ -1,6 +1,4 @@
-
-
-# Panduan Instalasi JupyterLab di Server Linux
+# JupyterLab Installation Guide on Linux Server
 <table style="width: 100%; text-align: center;">
   <tr>
     <td>
@@ -10,7 +8,7 @@
 </table>
 Langkah-langkah berikut akan membantu Anda menginstal dan mengonfigurasi JupyterLab di server Linux.
 
-## 1. Instalasi Pip dan JupyterLab
+## 1. Pip and JupyterLab Installation
 ```bash
 sudo apt update && sudo apt upgrade -y
 sudo apt install python3-pip
@@ -18,12 +16,12 @@ sudo apt install python3-pip
 ```bash
 pip install --user jupyterlab
 ```
-## 2. Set Path Lokal ke User
+## 2. Set path local user
 ```bash
 sudo nano ~/.bashrc
 ```
-## Isi file ~/.bashrc dengan yang berikut :
-Note :  ganti PS1 root@"masukinusermu":
+## Fill the ~/.bashrc file with the following:
+> **Note:** replace PS1 root@`yourusername`:
 ```bash
 # ~/.bashrc: executed by bash(1) for non-login shells.
 
@@ -92,18 +90,18 @@ export PATH=$HOME/.local/bin:$PATH
 export PATH=$PATH:/usr/bin:/bin
 
 ```
-## Terapkan perubahan dan uji
+## Apply changes and test
 ```bash
 source ~/.bashrc
 ```
 ```bash
 jupyter-lab --allow-root
 ```
-## 3. Konfigurasi JupyterLab
+## 3. JupyterLab Configuration
 ```bash
 jupyter-lab --generate-config
 ```
-## Output: Writing default config to: /home/<user>/.jupyter/jupyter_lab_config.py
+> **Output:** `Writing default config to: /home/<user>/.jupyter/jupyter_lab_config.py`
 ```bash
 jupyter-lab password
 ```
@@ -114,16 +112,16 @@ jupyter-lab password
 > [JupyterPasswordApp] Wrote hashed password to `/home/<user>/.jupyter/jupyter_server_config.json`
 
 
-## Setup jupy config 
+## Server config Configuration
 ```bash
 sudo cat ~/.jupyter/jupyter_server_config.json
 ```
-> **Note:** Simpan dan catat `argon2:<hash-password>`
+> **Note:** Save and note `argon2:<hash-password>`
 
 ```bash
 sudo nano ~/.jupyter/jupyter_lab_config.py
 ```
-## Isi file dengan: 
+## Fill the file with:
 ```bash
 c.ServerApp.ip = '0.0.0.0'
 c.ServerApp.open_browser = False
@@ -132,13 +130,13 @@ c.ServerApp.port = 8888
 c.ContentsManager.allow_hidden = True
 c.TerminalInteractiveShell.shell = 'bash'
 ```
-> **Note:** Ganti `ServerApp.ip = ""` ke IP VPS kamu, dan masukkan `ServerApp.password = ""` yang tadi kamu catat.
+> **Note:** fill `ServerApp.ip = ""` to your VPS IP, and fill `ServerApp.password = ""` that you noted earlier.
 
-## 4. Membuat Service untuk JupyterLab
+## 4. Creating a Service for JupyterLab
 ```bash
 sudo nano /etc/systemd/system/jupyter-lab.service
 ```
-## Isi file dengan:
+## Fill the file with:
 ```bash
 [Unit]
 Description=Jupyter Lab
@@ -154,7 +152,7 @@ RestartSec=10
 [Install]
 WantedBy=multi-user.target
 ```
-## Reload daemon, aktifkan service, dan jalankan JupyterLab
+## Reload daemon, enable the service, and run JupyterLab with screen session.
 ```
 sudo systemctl daemon-reload
 ```
@@ -167,5 +165,5 @@ screen -S jupy
 ```
 jupyter-lab --allow-root
 ```
-## Untuk keluar dari sesi screen:
+## To exit a screen session:
 CTRL + A + D
