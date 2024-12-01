@@ -1,4 +1,5 @@
-![JUPY](https://github.com/ichinur/install-jupyterlab/blob/main/Screenshot%202024-12-01%20221634.png)
+<img src="https://github.com/ichinur/install-jupyterlab/blob/main/Screenshot%202024-12-01%20221634.png" alt="JUPYLABS" width="600"/>
+
 
 # Panduan Instalasi JupyterLab di Server Linux
 
