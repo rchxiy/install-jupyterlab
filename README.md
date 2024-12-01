@@ -2,19 +2,19 @@
 
 Langkah-langkah berikut akan membantu Anda menginstal dan mengonfigurasi JupyterLab di server Linux.
 
+## 1. Instalasi Pip dan JupyterLab
 ```bash
-# 1. Instalasi Pip dan JupyterLab
 sudo apt update && sudo apt upgrade -y
 sudo apt install python3-pip
 ```
 ```bash
 pip install --user jupyterlab
 ```
-# 2. Set Path Lokal ke User
+## 2. Set Path Lokal ke User
 ```bash
 sudo nano ~/.bashrc
 ```
-# Isi file ~/.bashrc dengan yang berikut:
+## Isi file ~/.bashrc dengan yang berikut:
 ```bash
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # If not running interactively, don't do anything
@@ -42,26 +42,26 @@ fi
 export PATH=$HOME/.local/bin:$PATH
 export PATH=$PATH:/usr/bin:/bin
 ```
-# Terapkan perubahan dan uji
+## Terapkan perubahan dan uji
 ```bash
 source ~/.bashrc
 ```
 ```bash
 jupyter-lab --allow-root
 ```
-# 3. Konfigurasi JupyterLab
+## 3. Konfigurasi JupyterLab
 ```bash
 jupyter-lab --generate-config
 ```
-# Output: Writing default config to: /home/<user>/.jupyter/jupyter_lab_config.py
+## Output: Writing default config to: /home/<user>/.jupyter/jupyter_lab_config.py
 ```bash
 jupyter-lab password
 ```
-# Output: Masukkan dan verifikasi password, lalu catat hashed_password di ~/.jupyter/jupyter_server_config.json
+## Output: Masukkan dan verifikasi password, lalu catat hashed_password di ~/.jupyter/jupyter_server_config.json
 ```bash
 sudo nano ~/.jupyter/jupyter_lab_config.py
 ```
-# Isi file dengan:
+## Isi file dengan:
 ```bash
 c.ServerApp.ip = '0.0.0.0'
 c.ServerApp.open_browser = False
@@ -70,11 +70,11 @@ c.ServerApp.port = 8888
 c.ContentsManager.allow_hidden = True
 c.TerminalInteractiveShell.shell = 'bash'
 ```
-# 4. Membuat Service untuk JupyterLab
+## 4. Membuat Service untuk JupyterLab
 ```bash
 sudo nano /etc/systemd/system/jupyter-lab.service
 ```
-# Isi file dengan:
+## Isi file dengan:
 ```bash
 [Unit]
 Description=Jupyter Lab
@@ -90,7 +90,7 @@ RestartSec=10
 [Install]
 WantedBy=multi-user.target
 ```
-# Reload daemon, aktifkan service, dan jalankan JupyterLab
+## Reload daemon, aktifkan service, dan jalankan JupyterLab
 ```
 sudo systemctl daemon-reload
 ```
@@ -103,8 +103,8 @@ screen -S jupy
 ```
 jupyter-lab --allow-root
 ```
-# Untuk keluar dari sesi screen:
+## Untuk keluar dari sesi screen:
 CTRL + A + D
 
-# Periksa apakah JupyterLab berjalan
+## Periksa apakah JupyterLab berjalan
 ss -antpl | grep jupyter
