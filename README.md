@@ -47,7 +47,7 @@ fi
 
 # Custom prompt for root and non-root users
 if [ "$USER" = "root" ]; then
-PS1='\[\e[1;32m\]root@masukkanusermu\[\e[0m\]:\w\$ '
+PS1='\[\e[1;32m\]root@yourusername\[\e[0m\]:\w\$ '
 else
     PS1='\u@\h:\w\$ '
 fi
