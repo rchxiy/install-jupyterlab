@@ -107,16 +107,19 @@ jupyter-lab --generate-config
 ```bash
 jupyter-lab password
 ```
-Output:
-Enter password: 
-Verify password: 
-[JupyterPasswordApp] Wrote hashed password to /home/<user>/.jupyter/jupyter_server_config.json
+> **Output:**
+> 
+> Enter password:  
+> Verify password:  
+> [JupyterPasswordApp] Wrote hashed password to `/home/<user>/.jupyter/jupyter_server_config.json`
+
 
 ## Setup jupy config 
 ```bash
 sudo cat ~/.jupyter/jupyter_server_config.json
 ```
-Note : lalu catat "argon2:<hash-password>"
+> **Note:** Simpan dan catat `argon2:<hash-password>`
+
 ```bash
 sudo nano ~/.jupyter/jupyter_lab_config.py
 ```
@@ -129,7 +132,7 @@ c.ServerApp.port = 8888
 c.ContentsManager.allow_hidden = True
 c.TerminalInteractiveShell.shell = 'bash'
 ```
-ganti ServerApp.ip ke ip vps mu, masukan ServerApp.password yang tadi kamu catat
+> **Note:** Ganti `ServerApp.ip = ""` ke IP VPS kamu, dan masukkan `ServerApp.password = ""` yang tadi kamu catat.
 
 ## 4. Membuat Service untuk JupyterLab
 ```bash
