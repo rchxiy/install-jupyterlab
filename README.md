@@ -1,3 +1,5 @@
+![JUPY](https://github.com/ichinur/install-jupyterlab/blob/main/Screenshot%202024-12-01%20221634.png)
+
 # Panduan Instalasi JupyterLab di Server Linux
 
 Langkah-langkah berikut akan membantu Anda menginstal dan mengonfigurasi JupyterLab di server Linux.
