@@ -117,7 +117,7 @@ jupyter-lab password
 > 
 > Enter password:  
 > Verify password:  
-> [JupyterPasswordApp] Wrote hashed password to `/home/<user>/.jupyter/jupyter_server_config.json`
+> [JupyterPasswordApp] Wrote hashed password to `/root/.jupyter/jupyter_server_config.json`
 
 
 ### Server config Configuration
