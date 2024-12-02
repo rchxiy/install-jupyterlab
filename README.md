@@ -13,6 +13,13 @@ The following steps will help you install and configure JupyterLab on a Linux se
 curl -sSL https://raw.githubusercontent.com/ichinur/install-jupyterlab/refs/heads/main/jupy.sh -o jupy.sh
 bash jupy.sh
 ```
+> Enter custom username :  
+> Enter your IP VPS :  
+
+> Enter password:  
+> Verify password:  
+
+
 
 
 # MANUAL INSTALLER
