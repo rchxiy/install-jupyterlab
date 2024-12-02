@@ -69,17 +69,6 @@ echo "PATH and PS1 configured successfully."
 echo "Generating JupyterLab configuration..."
 jupyter-lab --generate-config
 
-# Langkah 8: Meminta password JupyterLab dan langsung melakukan hash tanpa prompt tambahan
-echo "Please enter your password for JupyterLab:"
-read -s JUPYTER_PASSWORD
-echo "Verifying password..."
-read -s JUPYTER_PASSWORD_VERIFY
-
-if [ "$JUPYTER_PASSWORD" != "$JUPYTER_PASSWORD_VERIFY" ]; then
-    echo "Error: Passwords do not match!"
-    exit 1
-fi
-
 # Set the password and generate the hash
 echo "Setting JupyterLab password..."
 jupyter-lab password
