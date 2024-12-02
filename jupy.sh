@@ -60,8 +60,9 @@ else
 fi
 EOT
 
-# Terapkan perubahan ~/.bashrc
-source "$BASHRC_PATH"
+# Terapkan perubahan ~/.bashrc dengan source untuk memastikan perubahan langsung diterapkan
+echo "Applying changes to .bashrc..."
+source "$HOME/.bashrc"  # Pastikan .bashrc dimuat ulang setelah perubahan
 echo "PATH and PS1 configured successfully."
 
 # Langkah 7: Generate konfigurasi JupyterLab
@@ -79,20 +80,7 @@ if [ "$JUPYTER_PASSWORD" != "$JUPYTER_PASSWORD_VERIFY" ]; then
     exit 1
 fi
 
-# Langkah 9: Gunakan expect untuk auto input pada jupyter-lab password
-echo "Setting JupyterLab password automatically using expect..."
-sudo apt install -y expect
-
-expect <<EOF
-spawn jupyter-lab password
-expect "Enter password:"
-send "$JUPYTER_PASSWORD\r"
-expect "Verify password:"
-send "$JUPYTER_PASSWORD\r"
-expect eof
-EOF
-
-# Langkah 10: Konfigurasi JupyterLab server
+# Langkah 9: Konfigurasi JupyterLab server
 CONFIG_PATH="$HOME/.jupyter/jupyter_lab_config.py"
 cat <<EOT > "$CONFIG_PATH"
 c.ServerApp.ip = '$VPS_IP'
@@ -105,7 +93,7 @@ EOT
 
 echo "Server configuration saved in $CONFIG_PATH"
 
-# Langkah 11: Membuat systemd service untuk JupyterLab (tidak dijalankan otomatis, hanya disimpan)
+# Langkah 10: Membuat systemd service untuk JupyterLab (tidak dijalankan otomatis, hanya disimpan)
 SERVICE_FILE="/etc/systemd/system/jupyter-lab.service"
 sudo bash -c "cat <<EOT > $SERVICE_FILE
 [Unit]
@@ -127,11 +115,11 @@ EOT"
 sudo systemctl daemon-reload
 sudo systemctl enable jupyter-lab.service
 
-# Langkah 12: Jalankan JupyterLab dalam sesi screen
+# Langkah 11: Jalankan JupyterLab dalam sesi screen
 echo "Starting JupyterLab in a screen session..."
 screen -dmS jupy bash -c "jupyter-lab --allow-root"
 
-# Langkah 13: Informasi akhir
+# Langkah 12: Informasi akhir
 echo "Installation complete!"
 echo "JupyterLab is running on: http://$VPS_IP:8888"
 echo "Your PS1 is set to: root@$CUSTOM_USERNAME"
