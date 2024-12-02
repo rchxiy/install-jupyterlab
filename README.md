@@ -22,7 +22,7 @@ sudo apt update && sudo apt upgrade -y
 sudo apt install python3-pip
 ```
 ```bash
-pip install --user jupyterlab
+pip install --user jupyterlab --no-deps
 ```
 ### 2. Set path
 ```bash
