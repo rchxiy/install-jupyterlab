@@ -1,13 +1,14 @@
 #!/bin/bash
 
+# Exit if any command fails
 set -e
 
-# Step 1: Ask for the custom username, default is "root"
+# Step 1: Request custom username input (default: root)
 CUSTOM_USERNAME=${CUSTOM_USERNAME:-root}
-
 echo "Please enter your custom username for root (default: root):"
 read -p "Username [$CUSTOM_USERNAME]: " USER_INPUT
 
+# Use the custom username if provided
 if [[ -z "$USER_INPUT" ]]; then
     CUSTOM_USERNAME=$CUSTOM_USERNAME
 else
@@ -16,7 +17,7 @@ fi
 
 echo "Using username: $CUSTOM_USERNAME"
 
-# Step 2: Ask for the VPS IP address
+# Step 2: Request VPS IP address
 echo "Please enter your VPS IP address (e.g., 192.168.1.1):"
 read -p "VPS IP: " VPS_IP
 
@@ -25,7 +26,7 @@ if [[ -z "$VPS_IP" ]]; then
     exit 1
 fi
 
-# Step 3: Update and upgrade the system
+# Step 3: Update and upgrade system
 echo "Updating and upgrading system..."
 sudo apt update && sudo apt upgrade -y
 
@@ -41,15 +42,16 @@ pip install --user jupyterlab
 echo "Configuring PATH and PS1 in .bashrc..."
 BASHRC_PATH="$HOME/.bashrc"
 
-# Ensure PATH is set properly
+# Add PATH if it doesn't exist
 if ! grep -q "export PATH=\$HOME/.local/bin:\$PATH" "$BASHRC_PATH"; then
     echo 'export PATH=$HOME/.local/bin:$PATH' >> "$BASHRC_PATH"
 fi
 
-# Customize PS1 prompt for the user
+# Adjust PS1 with custom username
 sed -i '/# Custom prompt for root and non-root users/,/# Set the terminal title for xterm-like terminals/d' "$BASHRC_PATH"
 cat <<EOT >> "$BASHRC_PATH"
 
+# Custom prompt for root and non-root users
 if [ "\$USER" = "root" ]; then
     PS1='\\[\\e[1;32m\\]root@$CUSTOM_USERNAME\\[\\e[0m\\]:\\w\\$ '
 else
@@ -57,7 +59,7 @@ else
 fi
 EOT
 
-# Apply the changes to .bashrc immediately
+# Apply changes to .bashrc
 echo "Applying changes to .bashrc..."
 source ~/.bashrc
 
@@ -65,20 +67,25 @@ source ~/.bashrc
 echo "Generating JupyterLab configuration..."
 jupyter-lab --generate-config
 
-# Step 8: Set password for JupyterLab
+# Step 8: Set JupyterLab password and hash it
 echo "Please enter your password for JupyterLab:"
+read -s JUPYTER_PASSWORD
+echo "Verifying password..."
+read -s JUPYTER_PASSWORD_VERIFY
+
+if [ "$JUPYTER_PASSWORD" != "$JUPYTER_PASSWORD_VERIFY" ]; then
+    echo "Error: Passwords do not match!"
+    exit 1
+fi
+
+echo "Setting JupyterLab password..."
 jupyter-lab password
 
 # Step 9: Read the hashed password from jupyter_server_config.json
 echo "Reading the hashed password from jupyter_server_config.json..."
 JUPYTER_PASSWORD_HASH=$(sudo cat ~/.jupyter/jupyter_server_config.json | grep -oP '(?<=hashed_password": ")[^"]*')
 
-if [[ -z "$JUPYTER_PASSWORD_HASH" ]]; then
-    echo "Error: Password hash not found. Please make sure the password was set correctly."
-    exit 1
-fi
-
-# Step 10: Save the server configuration in jupyter_lab_config.py
+# Step 10: Configure JupyterLab server settings
 CONFIG_PATH="$HOME/.jupyter/jupyter_lab_config.py"
 cat <<EOT > "$CONFIG_PATH"
 c.ServerApp.ip = '$VPS_IP'
@@ -91,7 +98,12 @@ EOT
 
 echo "Server configuration saved in $CONFIG_PATH"
 
-# Step 11: Create systemd service for JupyterLab
+# Step 11: Set correct file permissions
+echo "Setting correct permissions for config files..."
+sudo chmod 644 ~/.jupyter/jupyter_server_config.json
+sudo chmod 644 ~/.jupyter/jupyter_lab_config.py
+
+# Step 12: Create systemd service for JupyterLab
 SERVICE_FILE="/etc/systemd/system/jupyter-lab.service"
 sudo bash -c "cat <<EOT > $SERVICE_FILE
 [Unit]
@@ -113,13 +125,12 @@ EOT"
 sudo systemctl daemon-reload
 sudo systemctl enable jupyter-lab.service
 
-# Step 12: Start JupyterLab in a screen session
+# Step 13: Start JupyterLab in a screen session
 echo "Starting JupyterLab in a screen session..."
 screen -dmS jupy bash -c "jupyter-lab --allow-root"
 
-# Final message
+# Step 14: Final information
 echo "Installation complete!"
 echo "JupyterLab is running on: http://$VPS_IP:8888"
 echo "Your PS1 is set to: root@$CUSTOM_USERNAME"
-echo "Your password hash is saved in $CONFIG_PATH."
 echo "To reattach to the screen session, use: screen -r jupy"
