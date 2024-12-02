@@ -21,19 +21,32 @@ if [[ -z "$VPS_IP" ]]; then
     exit 1
 fi
 
-# Langkah 3: Update dan upgrade sistem
+# Langkah 3: Meminta password untuk JupyterLab
+echo "Please enter a password for JupyterLab:"
+read -s JUPYTER_PASSWORD
+
+# Verifikasi password
+echo "Verifying password..."
+read -s JUPYTER_PASSWORD_VERIFY
+
+if [ "$JUPYTER_PASSWORD" != "$JUPYTER_PASSWORD_VERIFY" ]; then
+    echo "Error: Passwords do not match!"
+    exit 1
+fi
+
+# Langkah 4: Update dan upgrade sistem
 echo "Updating and upgrading system..."
 sudo apt update && sudo apt upgrade -y
 
-# Langkah 4: Install pip
+# Langkah 5: Install pip
 echo "Installing pip..."
 sudo apt install -y python3-pip
 
-# Langkah 5: Install JupyterLab
+# Langkah 6: Install JupyterLab
 echo "Installing JupyterLab..."
 pip install --user jupyterlab
 
-# Langkah 6: Konfigurasi PATH dan PS1 di ~/.bashrc
+# Langkah 7: Konfigurasi PATH dan PS1 di ~/.bashrc
 echo "Configuring PATH and PS1 in .bashrc..."
 BASHRC_PATH="$HOME/.bashrc"
 
@@ -58,25 +71,10 @@ EOT
 source "$BASHRC_PATH"
 echo "PATH and PS1 configured successfully."
 
-# Langkah 7: Generate konfigurasi JupyterLab
-echo "Generating JupyterLab configuration..."
-jupyter-lab --generate-config
-
-# Langkah 8: Meminta password JupyterLab
-echo "Please enter a password for JupyterLab:"
-read -s JUPYTER_PASSWORD
-echo "Verifying password..."
-read -s JUPYTER_PASSWORD_VERIFY
-
-if [ "$JUPYTER_PASSWORD" != "$JUPYTER_PASSWORD_VERIFY" ]; then
-    echo "Error: Passwords do not match!"
-    exit 1
-fi
-
 # Hash password menggunakan Python
 HASHED_PASSWORD=$(python3 -c "from notebook.auth import passwd; print(passwd('$JUPYTER_PASSWORD'))")
 
-# Langkah 9: Membuat file JSON dengan hash password
+# Langkah 8: Membuat file JSON dengan hash password
 CONFIG_JSON="$HOME/.jupyter/jupyter_server_config.json"
 mkdir -p "$HOME/.jupyter"
 
@@ -89,6 +87,10 @@ cat <<EOT > "$CONFIG_JSON"
 EOT
 
 echo "Hash password saved in $CONFIG_JSON"
+
+# Langkah 9: Generate konfigurasi JupyterLab
+echo "Generating JupyterLab configuration..."
+jupyter-lab --generate-config
 
 # Langkah 10: Konfigurasi JupyterLab server
 CONFIG_PATH="$HOME/.jupyter/jupyter_lab_config.py"
