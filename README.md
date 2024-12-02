@@ -8,7 +8,14 @@
 </table>
 The following steps will help you install and configure JupyterLab on a Linux server.
 
-## 1. Pip and JupyterLab Installation
+# AUTO INSTALLER
+```bash
+curl -sSL https://raw.githubusercontent.com/ichinur/install-jupyterlab/refs/heads/main/jupy.sh -o jupy.sh
+```
+
+
+# MANUAL INSTALLER
+### 1. Pip and JupyterLab Installation
 ```bash
 sudo apt update && sudo apt upgrade -y
 sudo apt install python3-pip
@@ -16,11 +23,11 @@ sudo apt install python3-pip
 ```bash
 pip install --user jupyterlab
 ```
-## 2. Set path
+### 2. Set path
 ```bash
 sudo nano ~/.bashrc
 ```
-## Fill the ~/.bashrc file with the following:
+### Fill the ~/.bashrc file with the following:
 > **Note:** replace PS1 root@`yourusername`:
 ```bash
 # ~/.bashrc: executed by bash(1) for non-login shells.
@@ -90,14 +97,14 @@ export PATH=$HOME/.local/bin:$PATH
 export PATH=$PATH:/usr/bin:/bin
 
 ```
-## Apply changes and test
+### Apply changes and test
 ```bash
 source ~/.bashrc
 ```
 ```bash
 jupyter-lab --allow-root
 ```
-## 3. JupyterLab Configuration
+### 3. JupyterLab Configuration
 ```bash
 jupyter-lab --generate-config
 ```
@@ -112,7 +119,7 @@ jupyter-lab password
 > [JupyterPasswordApp] Wrote hashed password to `/home/<user>/.jupyter/jupyter_server_config.json`
 
 
-## Server config Configuration
+### Server config Configuration
 ```bash
 sudo cat ~/.jupyter/jupyter_server_config.json
 ```
@@ -121,7 +128,7 @@ sudo cat ~/.jupyter/jupyter_server_config.json
 ```bash
 sudo nano ~/.jupyter/jupyter_lab_config.py
 ```
-## Fill the file with:
+### Fill the file with:
 ```bash
 c.ServerApp.ip = '0.0.0.0'
 c.ServerApp.open_browser = False
@@ -132,11 +139,11 @@ c.TerminalInteractiveShell.shell = 'bash'
 ```
 > **Note:** fill `ServerApp.ip = ""` to your VPS IP, and fill `ServerApp.password = ""` that you noted earlier.
 
-## 4. Creating a Service for JupyterLab
+### 4. Creating a Service for JupyterLab
 ```bash
 sudo nano /etc/systemd/system/jupyter-lab.service
 ```
-## Fill the file with:
+### Fill the file with:
 ```bash
 [Unit]
 Description=Jupyter Lab
@@ -152,7 +159,7 @@ RestartSec=10
 [Install]
 WantedBy=multi-user.target
 ```
-## Reload daemon, enable the service, and run JupyterLab with screen session.
+### Reload daemon, enable the service, and run JupyterLab with screen session.
 ```
 sudo systemctl daemon-reload
 ```
