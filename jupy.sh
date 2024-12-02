@@ -3,9 +3,9 @@
 # Exit jika terjadi error
 set -e
 
-# Langkah 1: Meminta input username untuk PS1
-echo "Please enter the username for PS1 (e.g., yourusername):"
-read -p "Username: " CUSTOM_USERNAME
+# Langkah 1: Meminta input custom username untuk root
+echo "Please enter your custom username for root (e.g., root):"
+read -p "Custom Username: " CUSTOM_USERNAME
 
 if [[ -z "$CUSTOM_USERNAME" ]]; then
     echo "Error: Username cannot be empty."
@@ -46,7 +46,16 @@ sudo apt install -y python3-pip
 echo "Installing JupyterLab..."
 pip install --user jupyterlab
 
-# Langkah 7: Konfigurasi PATH dan PS1 di ~/.bashrc
+# Langkah 7: Install notebook module jika belum ada
+echo "Checking and installing 'notebook' module if not already installed..."
+if ! python3 -c "import notebook" &>/dev/null; then
+    echo "'notebook' module not found. Installing it..."
+    pip install notebook
+else
+    echo "'notebook' module is already installed."
+fi
+
+# Langkah 8: Konfigurasi PATH dan PS1 di ~/.bashrc
 echo "Configuring PATH and PS1 in .bashrc..."
 BASHRC_PATH="$HOME/.bashrc"
 
@@ -55,7 +64,7 @@ if ! grep -q "export PATH=\$HOME/.local/bin:\$PATH" "$BASHRC_PATH"; then
     echo 'export PATH=$HOME/.local/bin:$PATH' >> "$BASHRC_PATH"
 fi
 
-# Menyesuaikan PS1 dengan input username
+# Menyesuaikan PS1 dengan custom username untuk root
 sed -i '/# Custom prompt for root and non-root users/,/# Set the terminal title for xterm-like terminals/d' "$BASHRC_PATH"
 cat <<EOT >> "$BASHRC_PATH"
 
@@ -74,7 +83,7 @@ echo "PATH and PS1 configured successfully."
 # Hash password menggunakan Python
 HASHED_PASSWORD=$(python3 -c "from notebook.auth import passwd; print(passwd('$JUPYTER_PASSWORD'))")
 
-# Langkah 8: Membuat file JSON dengan hash password
+# Langkah 9: Membuat file JSON dengan hash password
 CONFIG_JSON="$HOME/.jupyter/jupyter_server_config.json"
 mkdir -p "$HOME/.jupyter"
 
@@ -88,11 +97,11 @@ EOT
 
 echo "Hash password saved in $CONFIG_JSON"
 
-# Langkah 9: Generate konfigurasi JupyterLab
+# Langkah 10: Generate konfigurasi JupyterLab
 echo "Generating JupyterLab configuration..."
 jupyter-lab --generate-config
 
-# Langkah 10: Konfigurasi JupyterLab server
+# Langkah 11: Konfigurasi JupyterLab server
 CONFIG_PATH="$HOME/.jupyter/jupyter_lab_config.py"
 cat <<EOT > "$CONFIG_PATH"
 c.ServerApp.ip = '$VPS_IP'
@@ -105,7 +114,7 @@ EOT
 
 echo "Server configuration saved in $CONFIG_PATH"
 
-# Langkah 11: Membuat systemd service untuk JupyterLab (tidak dijalankan otomatis, hanya disimpan)
+# Langkah 12: Membuat systemd service untuk JupyterLab (tidak dijalankan otomatis, hanya disimpan)
 SERVICE_FILE="/etc/systemd/system/jupyter-lab.service"
 sudo bash -c "cat <<EOT > $SERVICE_FILE
 [Unit]
@@ -127,11 +136,11 @@ EOT"
 sudo systemctl daemon-reload
 sudo systemctl enable jupyter-lab.service
 
-# Langkah 12: Jalankan JupyterLab dalam sesi screen
+# Langkah 13: Jalankan JupyterLab dalam sesi screen
 echo "Starting JupyterLab in a screen session..."
 screen -dmS jupy bash -c "jupyter-lab --allow-root"
 
-# Langkah 13: Informasi akhir
+# Langkah 14: Informasi akhir
 echo "Installation complete!"
 echo "JupyterLab is running on: http://$VPS_IP:8888"
 echo "Your PS1 is set to: root@$CUSTOM_USERNAME"
