@@ -62,15 +62,13 @@ EOT
 
 # Terapkan perubahan ~/.bashrc dengan source untuk memastikan perubahan langsung diterapkan
 echo "Applying changes to .bashrc..."
-source "$HOME/.bashrc"  # Pastikan .bashrc dimuat ulang setelah perubahan
+source ~/.bashrc  # Pastikan .bashrc dimuat ulang setelah perubahan
 echo "PATH and PS1 configured successfully."
 
 # Langkah 7: Generate konfigurasi JupyterLab
 echo "Generating JupyterLab configuration..."
 jupyter-lab --generate-config
 
-# Set the password and generate the hash
-echo "Setting JupyterLab password..."
 jupyter-lab password
 
 # Read the hashed password from jupyter_server_config.json
@@ -124,4 +122,4 @@ echo "Your password is saved in $CONFIG_PATH."
 echo "To reattach to the screen session, use: screen -r jupy"
 
 # Apply the changes to .bashrc again
-source "$HOME/.bashrc"  # This will apply the PS1 changes one more time
+source ~/.bashrc  # This will apply the PS1 changes one more time
