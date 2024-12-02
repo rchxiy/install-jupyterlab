@@ -4,14 +4,19 @@
 set -e
 
 # Langkah 1: Meminta input username untuk PS1, dengan fallback ke "root" jika tidak diinput
-echo "Please enter your custom username for root (e.g., root):"
-read -p "Username: " CUSTOM_USERNAME
+CUSTOM_USERNAME=${CUSTOM_USERNAME:-root}  # Gunakan variabel lingkungan CUSTOM_USERNAME jika ada
 
-# Jika CUSTOM_USERNAME kosong, set ke 'root'
-if [[ -z "$CUSTOM_USERNAME" ]]; then
-    CUSTOM_USERNAME="root"
-    echo "No username entered. Using default: $CUSTOM_USERNAME"
+echo "Please enter your custom username for root (default: root):"
+read -p "Username [$CUSTOM_USERNAME]: " USER_INPUT
+
+# Jika USER_INPUT kosong, gunakan CUSTOM_USERNAME
+if [[ -z "$USER_INPUT" ]]; then
+    CUSTOM_USERNAME=$CUSTOM_USERNAME
+else
+    CUSTOM_USERNAME=$USER_INPUT
 fi
+
+echo "Using username: $CUSTOM_USERNAME"
 
 # Langkah 2: Meminta input IP VPS
 echo "Please enter your VPS IP address (e.g., 192.168.1.1):"
