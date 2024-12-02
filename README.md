@@ -109,7 +109,7 @@ jupyter-lab --allow-root
 ```bash
 jupyter-lab --generate-config
 ```
-> **Output:** `Writing default config to: /home/<user>/.jupyter/jupyter_lab_config.py`
+> **Output:** `Writing default config to: /root/.jupyter/jupyter_lab_config.py`
 ```bash
 jupyter-lab password
 ```
