@@ -68,8 +68,8 @@ echo "PATH and PS1 configured successfully."
 echo "Generating JupyterLab configuration..."
 jupyter-lab --generate-config
 
-# Langkah 8: Meminta password JupyterLab
-echo "Please enter a password for JupyterLab:"
+# Langkah 8: Meminta password JupyterLab dan langsung melakukan hash tanpa prompt tambahan
+echo "Please enter your password for JupyterLab:"
 read -s JUPYTER_PASSWORD
 echo "Verifying password..."
 read -s JUPYTER_PASSWORD_VERIFY
@@ -79,29 +79,25 @@ if [ "$JUPYTER_PASSWORD" != "$JUPYTER_PASSWORD_VERIFY" ]; then
     exit 1
 fi
 
-# Hash password menggunakan Python
-HASHED_PASSWORD=$(python3 -c "from notebook.auth import passwd; print(passwd('$JUPYTER_PASSWORD'))")
+# Langkah 9: Gunakan expect untuk auto input pada jupyter-lab password
+echo "Setting JupyterLab password automatically using expect..."
+sudo apt install -y expect
 
-# Langkah 9: Membuat file JSON dengan hash password
-CONFIG_JSON="$HOME/.jupyter/jupyter_server_config.json"
-mkdir -p "$HOME/.jupyter"
-
-cat <<EOT > "$CONFIG_JSON"
-{
-  "IdentityProvider": {
-    "hashed_password": "$HASHED_PASSWORD"
-  }
-}
-EOT
-
-echo "Hash password saved in $CONFIG_JSON"
+expect <<EOF
+spawn jupyter-lab password
+expect "Enter password:"
+send "$JUPYTER_PASSWORD\r"
+expect "Verify password:"
+send "$JUPYTER_PASSWORD\r"
+expect eof
+EOF
 
 # Langkah 10: Konfigurasi JupyterLab server
 CONFIG_PATH="$HOME/.jupyter/jupyter_lab_config.py"
 cat <<EOT > "$CONFIG_PATH"
 c.ServerApp.ip = '$VPS_IP'
 c.ServerApp.open_browser = False
-c.ServerApp.password = '$HASHED_PASSWORD'
+c.ServerApp.password = '$JUPYTER_PASSWORD'
 c.ServerApp.port = 8888
 c.ContentsManager.allow_hidden = True
 c.TerminalInteractiveShell.shell = 'bash'
@@ -139,5 +135,5 @@ screen -dmS jupy bash -c "jupyter-lab --allow-root"
 echo "Installation complete!"
 echo "JupyterLab is running on: http://$VPS_IP:8888"
 echo "Your PS1 is set to: root@$CUSTOM_USERNAME"
-echo "Your hashed password (argon2) is saved in $CONFIG_JSON and added to the server configuration."
+echo "Your password is saved in $CONFIG_PATH."
 echo "To reattach to the screen session, use: screen -r jupy"
