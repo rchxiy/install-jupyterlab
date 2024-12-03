@@ -35,12 +35,10 @@ pip install --user jupyterlab
 echo "Configuring PATH and PS1 in .bashrc..."
 BASHRC_PATH="$HOME/.bashrc"
 
-# Add ~/.local/bin to PATH if it's not already present
 if ! grep -q "export PATH=\$HOME/.local/bin:\$PATH" "$BASHRC_PATH"; then
     echo 'export PATH=$HOME/.local/bin:$PATH' >> "$BASHRC_PATH"
 fi
 
-# Add /usr/bin:/bin to PATH if it's not already present
 if ! grep -q "export PATH=\$PATH:/usr/bin:/bin" "$BASHRC_PATH"; then
     echo 'export PATH=$PATH:/usr/bin:/bin' >> "$BASHRC_PATH"
 fi
