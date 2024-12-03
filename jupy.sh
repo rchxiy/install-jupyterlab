@@ -35,10 +35,17 @@ pip install --user jupyterlab
 echo "Configuring PATH and PS1 in .bashrc..."
 BASHRC_PATH="$HOME/.bashrc"
 
+# Add ~/.local/bin to PATH if it's not already present
 if ! grep -q "export PATH=\$HOME/.local/bin:\$PATH" "$BASHRC_PATH"; then
     echo 'export PATH=$HOME/.local/bin:$PATH' >> "$BASHRC_PATH"
 fi
 
+# Add /usr/bin:/bin to PATH if it's not already present
+if ! grep -q "export PATH=\$PATH:/usr/bin:/bin" "$BASHRC_PATH"; then
+    echo 'export PATH=$PATH:/usr/bin:/bin' >> "$BASHRC_PATH"
+fi
+
+# Update PS1 configuration for custom prompt
 sed -i '/# Custom prompt for root and non-root users/,/# Set the terminal title for xterm-like terminals/d' "$BASHRC_PATH"
 cat <<EOT >> "$BASHRC_PATH"
 
@@ -95,7 +102,7 @@ sudo systemctl daemon-reload
 sudo systemctl enable jupyter-lab.service
 
 echo "Starting JupyterLab in a screen session..."
-screen -dmS jupy bash -c "jupyter-lab --allow-root"
+screen -dmS jupy bash -c "/root/.local/bin/jupyter-lab --allow-root"
 
 echo "Installation complete!"
 echo "JupyterLab is running on: http://$VPS_IP:8888"
