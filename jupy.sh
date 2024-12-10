@@ -4,7 +4,7 @@ set -e
 
 CUSTOM_USERNAME=${CUSTOM_USERNAME:-root}
 
-echo "Please enter your custom username for root :"
+echo "Please enter your custom username for root:"
 read -p "Username [$CUSTOM_USERNAME]: " USER_INPUT
 
 if [[ -z "$USER_INPUT" ]]; then
@@ -56,12 +56,20 @@ fi
 EOT
 
 echo "Applying changes to .bashrc..."
-source ~/.bashrc
-echo "PATH and PS1 configured successfully."
+# Jika shell interaktif, source langsung
+if [[ $- == *i* ]]; then
+    source ~/.bashrc
+    echo ".bashrc changes applied successfully!"
+else
+    # Jalankan shell baru untuk memastikan perubahan diterapkan
+    echo "Non-interactive shell detected. Spawning a new interactive shell..."
+    exec bash --login
+fi
 
 echo "Generating JupyterLab configuration..."
 jupyter-lab --generate-config
 
+echo "Setting up JupyterLab password..."
 jupyter-lab password
 
 echo "Reading the hashed password from jupyter_server_config.json..."
@@ -107,5 +115,3 @@ echo "JupyterLab is running on: http://$VPS_IP:8888"
 echo "Your PS1 is set to: root@$CUSTOM_USERNAME"
 echo "Your password is saved in $CONFIG_PATH."
 echo "To reattach to the screen session, use: screen -r jupy"
-
-source ~/.bashrc
