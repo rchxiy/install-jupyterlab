@@ -56,14 +56,13 @@ fi
 EOT
 
 echo "Applying changes to .bashrc..."
-# Jika shell interaktif, source langsung
-if [[ $- == *i* ]]; then
-    source ~/.bashrc
-    echo ".bashrc changes applied successfully!"
+# Pastikan perubahan diterapkan untuk sesi ini juga
+export PATH=$HOME/.local/bin:$PATH
+export PATH=$PATH:/usr/bin:/bin
+if [ "$USER" = "root" ]; then
+    export PS1="\\[\\e[1;32m\\]root@$CUSTOM_USERNAME\\[\\e[0m\\]:\\w\\$ "
 else
-    # Jalankan shell baru untuk memastikan perubahan diterapkan
-    echo "Non-interactive shell detected. Spawning a new interactive shell..."
-    exec bash --login
+    export PS1="\\u@\\h:\\w\\$ "
 fi
 
 echo "Generating JupyterLab configuration..."
