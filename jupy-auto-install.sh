@@ -15,22 +15,25 @@ fi
 
 echo "Using username: $CUSTOM_USERNAME"
 
-echo "Please enter your VPS IP address (e.g., 222.413.123.31):"
-read -p "VPS IP: " VPS_IP
-
+echo "Detecting VPS IP address..."
+VPS_IP=$(hostname -I | awk '{print $1}')
 if [[ -z "$VPS_IP" ]]; then
-    echo "Error: VPS IP cannot be empty."
+    echo "Error: Unable to detect VPS IP address."
     exit 1
 fi
+echo "Detected VPS IP: $VPS_IP"
 
 echo "Updating and upgrading system..."
 sudo apt update && sudo apt upgrade -y
 
-echo "Installing pip..."
-sudo apt install -y python3-pip
+echo "Installing essential packages..."
+sudo apt install -y build-essential curl wget python3 python3-pip screen
 
-echo "Installing screen..."
-sudo apt install -y screen
+echo "Installing Node.js (LTS 20++)..."
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs
+node -v
+npm -v
 
 echo "Installing JupyterLab..."
 pip install --user jupyterlab
@@ -46,6 +49,7 @@ if ! grep -q "export PATH=\$PATH:/usr/bin:/bin" "$BASHRC_PATH"; then
     echo 'export PATH=$PATH:/usr/bin:/bin' >> "$BASHRC_PATH"
 fi
 
+# Update PS1 configuration for custom prompt
 sed -i '/# Custom prompt for root and non-root users/,/# Set the terminal title for xterm-like terminals/d' "$BASHRC_PATH"
 cat <<EOT >> "$BASHRC_PATH"
 
