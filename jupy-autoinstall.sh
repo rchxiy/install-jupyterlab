@@ -46,7 +46,6 @@ if ! grep -q "export PATH=\$PATH:/usr/bin:/bin" "$BASHRC_PATH"; then
     echo 'export PATH=$PATH:/usr/bin:/bin' >> "$BASHRC_PATH"
 fi
 
-# Update PS1 configuration for custom prompt
 sed -i '/# Custom prompt for root and non-root users/,/# Set the terminal title for xterm-like terminals/d' "$BASHRC_PATH"
 cat <<EOT >> "$BASHRC_PATH"
 
