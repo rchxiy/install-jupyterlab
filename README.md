@@ -10,8 +10,8 @@ The following steps will help you install and configure JupyterLab on a Linux se
 
 # AUTO INSTALLER
 ```bash
-curl -sSL https://raw.githubusercontent.com/ichinur/install-jupyterlab/refs/heads/main/jupy-auto-install.sh -o jupy.sh
-bash jupy.sh
+curl -sSL https://raw.githubusercontent.com/ichinur/install-jupyterlab/refs/heads/main/jupy-auto-install.sh -o jupy-auto-install.sh
+bash jupy-auto-install.sh
 ```
 > Enter custom username :  
 > Enter your IP VPS :  
