@@ -36,7 +36,7 @@ node -v
 npm -v
 
 echo "Installing JupyterLab..."
-pip install --user --break-system-packages jupyterlab
+pip install --user jupyterlab
 
 echo "Configuring PATH and PS1 in .bashrc..."
 BASHRC_PATH="$HOME/.bashrc"
