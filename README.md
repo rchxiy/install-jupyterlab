@@ -2,7 +2,7 @@
 <table style="width: 100%; text-align: center;">
   <tr>
     <td>
-<img src="https://github.com/ichinur/install-jupyterlab/blob/main/Screenshot%202024-12-01%20221634.png" alt="JUPYLABS" width="600"/>
+<img src="https://github.com/rchxiy/install-jupyterlab/blob/main/Screenshot%202024-12-01%20221634.png" alt="JUPYLABS" width="600"/>
    </td>
   </tr>
 </table>
@@ -10,7 +10,7 @@ The following steps will help you install and configure JupyterLab on a Linux se
 
 # AUTO INSTALLER
 ```bash
-curl -sSL https://raw.githubusercontent.com/ichinur/install-jupyterlab/refs/heads/main/jupy-auto-install.sh -o jupy-auto-install.sh
+curl -sSL https://raw.githubusercontent.com/rchxiy/install-jupyterlab/refs/heads/main/jupy-auto-install.sh -o jupy-auto-install.sh
 bash jupy-auto-install.sh
 ```
 > Enter custom username :  
